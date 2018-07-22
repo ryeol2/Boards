@@ -1,0 +1,22 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spring.project.community.service.JoinMember">
+
+<insert id="join" parameterType="spring.project.community.join.dto.JoinDto">
+<!-- resultType="spring.project.community.login.dto.LDTO" -->
+INSERT INTO COM_MEMBER_INFO(CID,CNAME,CPWD,CNNAME,CEMAIL) VALUES(#{cId},#{cName},#{cPwd},#{cNname},#{cEmail})
+</insert>
+
+<select id="overLapid" resultType="spring.project.community.join.dto.JoinDto">
+SELECT CID FROM COM_MEMBER_INFO WHERE CID = #{CID}
+</select>
+
+<select id="overLapNick" resultType="spring.project.community.join.dto.JoinDto">
+SELECT CNNAME FROM COM_MEMBER_INFO WHERE CNNAME = #{CNNAME}
+</select>
+
+
+
+</mapper>

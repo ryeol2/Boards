@@ -1,0 +1,26 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spring.project.community.service.Board">
+
+<insert id="contentWrite" parameterType="spring.project.community.board.dto.boardDTO">
+<!-- resultType="spring.project.community.login.dto.LDTO" -->
+INSERT INTO COM_BOARD(CTITLE,CCONTENT,CNNAME) VALUES(#{cTitle},#{cContent},#{cNname})
+</insert>
+
+<select id="contentList" resultType="spring.project.community.board.dto.boardDTO">
+SELECT CNUM, CTITLE, CNNAME, CHIT  FROM COM_BOARD ORDER BY CNUM DESC
+</select>
+
+<select id="contentView" resultType="spring.project.community.board.dto.boardDTO">
+SELECT CNUM, CTITLE, CNNAME, CCONTENT,CHIT  FROM COM_BOARD WHERE CNUM = #{CNUM}
+</select>
+
+<update id="contentHits" parameterType="spring.project.community.board.dto.boardDTO">
+UPDATE COM_BOARD SET CHIT = CHIT+1 WHERE CNUM = #{CNUM}
+</update>
+
+
+
+</mapper>
