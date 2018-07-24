@@ -26,6 +26,14 @@
 	</table>
 	<br>
 	<input type="button" name="goList" value="목록으로"
-		onclick="javascript:window.location.href= 'board'">
+		onclick="javascript:window.location.href= 'board'"> &nbsp;&nbsp;&nbsp;
+		<form action="modify" method="post">
+		<input type="submit" name ="modify" value="수정" >
+		<input type="hidden" name="cNum" value="${contentview.cNum}">
+		</form>&nbsp;&nbsp;&nbsp;
+		<form action="delete" method="post">
+		<input type="submit" name="delete" value="삭제">
+			<input type="hidden" name="cNum" value="${contentview.cNum}">
+		</form>
 </body>
 </html>

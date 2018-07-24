@@ -42,12 +42,16 @@ private SqlSession sqlSession;
 	@Override
 	public void contentModify(boardDTO boardDto) {
 		// TODO Auto-generated method stub
+		Board board = sqlSession.getMapper(Board.class);
+		board.contentModify(boardDto);
 
 	}
 
 	@Override
-	public void contentDelete(boardDTO boardDto) {
+	public int contentDelete(int cNum) {
 		// TODO Auto-generated method stub
+		
+		return sqlSession.delete("spring.project.community.service.Board.contentDelete", cNum);
 
 	}
 	

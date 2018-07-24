@@ -21,6 +21,13 @@ SELECT CNUM, CTITLE, CNNAME, CCONTENT,CHIT  FROM COM_BOARD WHERE CNUM = #{CNUM}
 UPDATE COM_BOARD SET CHIT = CHIT+1 WHERE CNUM = #{CNUM}
 </update>
 
+<update id="contentModify">
+UPDATE COM_BOARD SET CTITLE = #{cTitle}, CCONTENT = #{cContent} WHERE CNUM = #{cNum}
+</update>
+
+<delete id="contentDelete">
+DELETE FROM COM_BOARD WHERE CNUM = #{cNum}
+</delete>
 
 
 </mapper>

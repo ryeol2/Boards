@@ -9,7 +9,7 @@ public interface Board {
 	boardDTO contentView(int cNum);
 	void contentWrite(boardDTO boardDto);
 	void contentModify(boardDTO boardDto);
-	void contentDelete(boardDTO boardDto);
+	int contentDelete(int cNum);
 	void contentHits(int cNum);
 
 }

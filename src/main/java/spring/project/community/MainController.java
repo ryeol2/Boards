@@ -147,5 +147,36 @@ public class MainController {
 
 		return "redirect:/board";
 	}
+	
+	@RequestMapping("modify")
+	public String ModifyView(HttpServletRequest request, Model model) {
+		String cNum = request.getParameter("cNum");
+		model.addAttribute("modifyView", boardmPl.contentView(Integer.parseInt(cNum)));
+		
+		return "/board/modify";
+	}
+	
+	@RequestMapping(value="modified", method= RequestMethod.POST)
+	public String Modified(HttpServletRequest request, Model model) {
+		String cNum = request.getParameter("cNum");
+		String cNname = request.getParameter("cNname");
+		String cTitle = request.getParameter("cTitle");
+		String cContent = request.getParameter("cContent");
+		boardDTO boardDto = new boardDTO();
+		boardDto.setcNum(cNum); boardDto.setcNname(cNname); boardDto.setcTitle(cTitle); boardDto.setcContent(cContent);
+		boardmPl.contentModify(boardDto);
+		return "redirect:/board";
+	}
+	@RequestMapping("delete")
+	public void contentDelete(HttpServletRequest request, Model model, HttpServletResponse response) throws IOException {
+		String cNum = request.getParameter("cNum");
+		response.setContentType("text/html; charset=utf-8;");
+		PrintWriter writer = response.getWriter();
+		writer.println("<script> alert('삭제가 완료되었습니다.'); document.location.href='board';</script>");
+		writer.flush();
+		boardmPl.contentDelete(Integer.parseInt(cNum));
+		
+		
+	}
 
 }
