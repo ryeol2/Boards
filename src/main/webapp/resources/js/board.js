@@ -15,3 +15,13 @@ var boardWrite = function() {
 	document.location.href = "boardWrite";
 	
 }
+
+$(document).ready(function () {
+
+    $("#searchBtn").on("click", function (event) {
+        self.location =
+            "/board${pageMaker.makeQuery(1)}"
+            + "&searchType=" + $("select option:selected").val()
+            + "&keyword=" + encodeURIComponent($("#keywordInput").val());
+    });
+});

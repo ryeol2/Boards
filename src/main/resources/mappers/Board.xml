@@ -10,11 +10,18 @@ INSERT INTO COM_BOARD(CTITLE,CCONTENT,CNNAME) VALUES(#{cTitle},#{cContent},#{cNn
 </insert>
 
 <select id="contentList" resultType="spring.project.community.board.dto.boardDTO">
-SELECT CNUM, CTITLE, CNNAME, CHIT  FROM COM_BOARD ORDER BY CNUM DESC
+SELECT CNUM, CTITLE, CNNAME, CHIT  FROM COM_BOARD WHERE CNUM>0
+<include refid="search"></include>
+ORDER BY CNUM DESC LIMIT #{pageStart}, #{perPageNum}
 </select>
 
 <select id="contentView" resultType="spring.project.community.board.dto.boardDTO">
 SELECT CNUM, CTITLE, CNNAME, CCONTENT,CHIT  FROM COM_BOARD WHERE CNUM = #{CNUM}
+</select>
+
+<select id="contentAll" resultType="java.lang.Integer">
+SELECT COUNT(*) FROM COM_BOARD WHERE CNUM >0
+<include refid="search"></include>
 </select>
 
 <update id="contentHits" parameterType="spring.project.community.board.dto.boardDTO">
@@ -29,5 +36,18 @@ UPDATE COM_BOARD SET CTITLE = #{cTitle}, CCONTENT = #{cContent} WHERE CNUM = #{c
 DELETE FROM COM_BOARD WHERE CNUM = #{cNum}
 </delete>
 
+<sql id="search">
+<if test="searchType != null">
+<if test="searchType == 'title'.toString() ">
+AND CTITLE LIKE CONCAT('%',#{keyword},'%')
+</if>
+<if test="searchType == 'content'.toString()">
+AND CCONTENT LIKE CONCAT('%',#{keyword},'%')
+</if>
+<if test="searchType =='cNname'.toString()">
+AND CNNAME LIKE CONCAT('%',#{keyword},'%')
+</if>
+</if>
+</sql>
 
 </mapper>

@@ -1,11 +1,12 @@
 package spring.project.community.service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import spring.project.community.board.criteria.SearchCriteria;
 import spring.project.community.board.dto.boardDTO;
 
 @Repository
@@ -14,13 +15,22 @@ public class BoardmPl implements BoardDAO {
 private SqlSession sqlSession;
 
 	@Override
-	public ArrayList<boardDTO> contentList() {
+	public List<boardDTO> contentList(SearchCriteria scriteria) {
 		// TODO Auto-generated method stub
-		ArrayList<boardDTO> boardDtos = new ArrayList<boardDTO>();
-		Board board = sqlSession.getMapper(Board.class);
-		boardDtos = board.contentList();
-		return boardDtos;
+	
+		//ArrayList<boardDTO> boardDtos = new ArrayList<boardDTO>();
+//		
+//		Board board = sqlSession.getMapper(Board.class);
+//		boardDtos = board.contentList(criteria);
+		return sqlSession.selectList("spring.project.community.service.Board.contentList", scriteria);
 	}
+	
+	@Override
+		public int contentAll(SearchCriteria scriteria) {
+			// TODO Auto-generated method stub
+		int count = sqlSession.selectOne("spring.project.community.service.Board.contentAll",scriteria);
+			return count;
+		}
 
 	@Override
 	public boardDTO contentView(int cNum) {

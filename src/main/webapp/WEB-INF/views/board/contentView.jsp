@@ -1,39 +1,50 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script></script>
-<title>°Ô½Ã±Û º¸±â</title>
+
+<title>ê²Œì‹œê¸€ ë³´ê¸°</title>
 </head>
 <body>
 	<table cellpading="0" cellspacing="0" border="1">
 		<tr>
-			<td colspan="2">±Û ¹øÈ£ : ${contentview.cNum}</td>
+			<td colspan="2">ê¸€ ë²ˆí˜¸ : ${contentview.cNum}</td>
 		</tr>
 		<tr>
-			<td>ÀÛ¼ºÀÚ : ${contentview.cNname }</td>
-			<td><label>Á¶È¸¼ö : </label>${contentview.cHit }</td>
+			<td>ì‘ì„±ì : ${contentview.cNname }</td>
+			<td><label>ì¡°íšŒìˆ˜ : </label>${contentview.cHit }</td>
 		</tr>
 		<tr>
-			<td colspan="2"><label>Á¦¸ñ : </label>${contentview.cTitle}</td>
+			<td colspan="2"><label>ì œëª© : </label>${contentview.cTitle}</td>
 		</tr>
 		<tr>
-		<td colspan="2"><label>³»¿ë : </label>${contentview.cContent}</td>
+		<td colspan="2"><label>ë‚´ìš© : </label>${contentview.cContent}</td>
 		</tr>
 		
 	</table>
 	<br>
-	<input type="button" name="goList" value="¸ñ·ÏÀ¸·Î"
-		onclick="javascript:window.location.href= 'board'"> &nbsp;&nbsp;&nbsp;
+	<table>
+	<tr>
+<input type="button" name="goList" value="ëª©ë¡ìœ¼ë¡œ"
+		onclick="javascript:window.location.href= 'board'"></tr>
+		<c:if test="${Nicks eq contentview.cNname}">
+		<tr>
 		<form action="modify" method="post">
-		<input type="submit" name ="modify" value="¼öÁ¤" >
+		<input type="submit" name ="modify" value="ìˆ˜ì •" >
 		<input type="hidden" name="cNum" value="${contentview.cNum}">
 		</form>&nbsp;&nbsp;&nbsp;
 		<form action="delete" method="post">
-		<input type="submit" name="delete" value="»èÁ¦">
-			<input type="hidden" name="cNum" value="${contentview.cNum}">
+		<input type="submit" name="delete" value="ì‚­ì œ">
+			<input type="hidden" name="cNum" value="${contentview.cNum}"><!-- í˜„ì¬í˜ì´ì§€ë¡œ ëŒì•„ê°ˆë•Œ ì‚¬ìš© -->
+			<input type="hidden" name="page" value = "${criteria.page }">
+			<input type="hidden" name="perPageNum" value="${criteria.perPageNum}">
 		</form>
+		</tr>
+		</c:if>
+		</table>
 </body>
 </html>

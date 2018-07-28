@@ -2,7 +2,7 @@ package spring.project.community;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,14 +12,19 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import spring.project.community.board.criteria.PageMaker;
+import spring.project.community.board.criteria.SearchCriteria;
 import spring.project.community.board.dto.boardDTO;
 import spring.project.community.join.dto.JoinDto;
 import spring.project.community.login.dto.LoginDTO;
-import spring.project.community.service.JoinMembermPl;
 import spring.project.community.service.BoardmPl;
+import spring.project.community.service.JoinMembermPl;
 
 @Controller
 public class MainController {
@@ -29,7 +34,7 @@ public class MainController {
 	JoinMembermPl joinMemberMpl;
 	@Autowired
 	BoardmPl boardmPl;
-
+	
 	private static final String loginNamespace = "spring.project.community.memberMapper";
 	private String url;
 	private HttpSession session;
@@ -47,7 +52,7 @@ public class MainController {
 	}
 
 	@RequestMapping(value = "/login_member", method = RequestMethod.POST)
-	public String loginCheck(HttpServletRequest request, Model model, HttpServletResponse response) throws IOException {
+	public String loginCheck(HttpServletRequest request, Model model, HttpServletResponse response, SearchCriteria scriteria) throws IOException {
 		String cId = request.getParameter("cId");
 		String cPwd = request.getParameter("cPwd");
 		LoginDTO loginDto = new LoginDTO();
@@ -56,7 +61,7 @@ public class MainController {
 			if (loginDto.getcId().equals(cId) && loginDto.getcPwd().equals(cPwd)) {
 				session = request.getSession(true);
 				session.setAttribute("Nick", loginDto.getcNname());
-				url = this.boardList(model);
+				url = this.boardList(model,scriteria);
 			}
 		} else {
 			response.setContentType("text/html; charset=utf-8;");
@@ -115,19 +120,24 @@ public class MainController {
 
 	}
 	
-	@RequestMapping("/board")
-	public String boardList(Model model) {
-		ArrayList<boardDTO> blist = boardmPl.contentList();
+	@RequestMapping(value="board", method=RequestMethod.GET)
+	public String boardList(Model model, SearchCriteria scriteria) {
+		List<boardDTO> blist = boardmPl.contentList(scriteria);
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCriteria(scriteria);
+		pageMaker.setTotalCount(boardmPl.contentAll(scriteria));
+		System.out.println(boardmPl.contentAll(scriteria));
+		model.addAttribute("pageMaker", pageMaker);
 		model.addAttribute("blist", blist);
-		for(int i=0;i<blist.size();i++)
-		System.out.println(blist.get(i).getcHit());
+		
 		
 		return "/board/board";
 	}
 	@RequestMapping("/contentView")
-	public String contentView(HttpServletRequest request, Model model) {
-		String cNum = request.getParameter("cNum");
-		model.addAttribute("contentview",boardmPl.contentView(Integer.parseInt(cNum)));
+	public String contentView(HttpServletRequest request, Model model, @RequestParam("cNum") int cNum,@ModelAttribute("scriteria") SearchCriteria scriteria) {
+		
+		model.addAttribute("contentview",boardmPl.contentView(cNum));
+		model.addAttribute("Nicks", session.getAttribute("Nick"));
 		return "/board/contentView";
 	}
 
@@ -149,15 +159,15 @@ public class MainController {
 	}
 	
 	@RequestMapping("modify")
-	public String ModifyView(HttpServletRequest request, Model model) {
-		String cNum = request.getParameter("cNum");
-		model.addAttribute("modifyView", boardmPl.contentView(Integer.parseInt(cNum)));
+	public String ModifyView(HttpServletRequest request, Model model,@RequestParam("cNum") int cNum,HttpSession session) {
+		request.getSession(true);
+		model.addAttribute("modifyView", boardmPl.contentView(cNum));
 		
 		return "/board/modify";
 	}
 	
 	@RequestMapping(value="modified", method= RequestMethod.POST)
-	public String Modified(HttpServletRequest request, Model model) {
+	public String Modified(HttpServletRequest request, Model model, SearchCriteria scriteria, RedirectAttributes rda) {
 		String cNum = request.getParameter("cNum");
 		String cNname = request.getParameter("cNname");
 		String cTitle = request.getParameter("cTitle");
@@ -165,6 +175,10 @@ public class MainController {
 		boardDTO boardDto = new boardDTO();
 		boardDto.setcNum(cNum); boardDto.setcNname(cNname); boardDto.setcTitle(cTitle); boardDto.setcContent(cContent);
 		boardmPl.contentModify(boardDto);
+		rda.addAttribute("page", scriteria.getPage());
+		rda.addAttribute("perPageNum", scriteria.getPerPageNum());
+		rda.addAttribute("searchType", scriteria.getSearchType());
+		rda.addAttribute("keyword", scriteria.getKeyword());
 		return "redirect:/board";
 	}
 	@RequestMapping("delete")

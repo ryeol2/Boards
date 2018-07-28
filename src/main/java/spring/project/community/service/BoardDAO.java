@@ -1,11 +1,13 @@
 package spring.project.community.service;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import spring.project.community.board.criteria.SearchCriteria;
 import spring.project.community.board.dto.boardDTO;
 
 public interface BoardDAO {
-	ArrayList<boardDTO> contentList();
+	List<boardDTO> contentList(SearchCriteria scriteria);
+	int contentAll(SearchCriteria scriteria);
 	boardDTO contentView(int cNum);
 	void contentWrite(boardDTO boardDto);
 	void contentModify(boardDTO boardDto);
